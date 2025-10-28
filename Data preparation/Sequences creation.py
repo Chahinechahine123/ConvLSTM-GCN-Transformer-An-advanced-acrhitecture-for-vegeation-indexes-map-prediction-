@@ -4,7 +4,7 @@ import rasterio
 import os
 import matplotlib.pyplot as plt
 
-# === INPUT fiel () ===
+# === INPUT file () ===
 data_dir = "images/"
 seq_len = 12
 
