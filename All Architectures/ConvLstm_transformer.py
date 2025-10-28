@@ -12,11 +12,11 @@ def build_model_convlstm_transformer(input_shape=(9, 372, 743, 1)):
         return_sequences=False,
         activation='tanh'
     )(inputs)
-    x = layers.BatchNormalization()(x)  # Shape: (372, 743, 64)
+    x = layers.BatchNormalization()(x)  
 
     # === Transformer-like block
-    h, w, c = x.shape[1], x.shape[2], x.shape[3]  # 372, 743, 64
-    x = layers.Reshape((h * w, c))(x)  # (372*743, 64)
+    h, w, c = x.shape[1], x.shape[2], x.shape[3] 
+    x = layers.Reshape((h * w, c))(x) 
     
     positions = tf.range(start=0, limit=h * w, delta=1)
     pos_encoding = layers.Embedding(input_dim=h * w, output_dim=c)(positions)
@@ -36,7 +36,7 @@ def build_model_convlstm_transformer(input_shape=(9, 372, 743, 1)):
     model.compile(optimizer='adam', loss='mse', metrics=['mae'])
     return model
 
-# Test the model
+
 if __name__ == "__main__":
-    model = build_model_convlstm_transformer((9, 372, 743, 1))
+    model = build_model_convlstm_transformer((12, 372, 743, 1))
     model.summary()
