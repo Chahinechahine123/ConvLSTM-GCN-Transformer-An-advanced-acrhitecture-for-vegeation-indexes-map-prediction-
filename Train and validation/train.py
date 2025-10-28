@@ -23,11 +23,11 @@ X_test = np.load("brute_data/X_test.npy")
 y_test = np.load("brute_data/y_test.npy")
 
 model = build_model_convlstm(input_shape=X_train.shape[1:])
-checkpoint = ModelCheckpoint("brute_data/ConvLstm11.keras", save_best_only=True, monitor="val_loss", mode="min")
-csv_logger = CSVLogger("brute_data/training11_log.csv", append=True)
+checkpoint = ModelCheckpoint("data/model.keras", save_best_only=True, monitor="val_loss", mode="min")
+csv_logger = CSVLogger("train/training11_log.csv", append=True)
 ReduceLR=ReduceLROnPlateau(patience=5, factor=0.5, verbose=1)
 Earlystop= EarlyStopping(patience=10, restore_best_weights=True)
 history = model.fit(X_train, y_train, 
                     validation_data=(X_test, y_test), 
-                    epochs=1, batch_size=1,
+                    epochs=, batch_size=,
                     callbacks=[checkpoint, csv_logger,Earlystop,ReduceLR])
