@@ -3,17 +3,17 @@ from tensorflow.keras import layers, Model
 import numpy as np
 
 # === 1. Dimensions ===
-H, W = 372, 743  # Hauteur et largeur de l’image (corrigé selon dataset)
+H, W = 372, 743  
 N = H * W
 
-# === 2. Création de la matrice d’adjacence A (sparse) ===
+# === 2. Sparse adjency matrix
 def create_grid_adjacency_sparse(h, w):
     row_idx = []
     col_idx = []
     for r in range(h):
         for c in range(w):
             i = r * w + c
-            for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:  # Voisins 4-connectés
+            for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:  # 4-neighboor
                 rr, cc = r + dr, c + dc
                 if 0 <= rr < h and 0 <= cc < w:
                     j = rr * w + cc
@@ -26,7 +26,7 @@ def create_grid_adjacency_sparse(h, w):
 
 A_sparse = create_grid_adjacency_sparse(H, W)  # shape (N, N)
 
-# === 3. Définition de la couche GCN corrigée ===
+# === 3.  GCN ===
 class GraphConvLayer(layers.Layer):
     def __init__(self, out_features, **kwargs):
         super().__init__(**kwargs)
@@ -35,7 +35,7 @@ class GraphConvLayer(layers.Layer):
     def build(self, input_shape):
         F_in = input_shape[-1]
         self.W = self.add_weight(
-            name="W_gcn",  # Nom en kwarg pour éviter collision avec shape
+            name="W_gcn", 
             shape=(F_in, self.out_features),
             initializer='glorot_uniform',
             trainable=True
@@ -56,8 +56,8 @@ class GraphConvLayer(layers.Layer):
             return tf.matmul(AXb, self.W) + self.b             # (N, out_features)
         return tf.map_fn(apply_graph_conv, X)  # (batch, N, out_features)
 
-# === 4. Modèle complet ConvLSTM + GCN ===
-def build_model_convlstm_gnn(input_shape=(9, H, W, 1)):
+# === 4. Model ===
+def build_model_convlstm_gnn(input_shape=(12, H, W, 1)):
     inputs = layers.Input(shape=input_shape)
 
     # 1) Bloc ConvLSTM2D
@@ -81,7 +81,7 @@ def build_model_convlstm_gnn(input_shape=(9, H, W, 1)):
     model.compile(optimizer='adam', loss='mse', metrics=['mae'])
     return model
 
-# === 5. Test du modèle ===
+
 if __name__ == "__main__":
     model = build_model_convlstm_gnn()
     model.summary()
