@@ -3,10 +3,7 @@ from tensorflow.keras.layers import ConvLSTM2D, BatchNormalization, Conv2D, Drop
 from tensorflow.keras.models import Sequential
 
 def build_model_convlstm(input_shape):
-    """
-    input_shape = (seq_len, H, W, 1)
-    sortie      = (H, W, 1)  normalisée [0,1]
-    """
+    
     model = Sequential([
         ConvLSTM2D(64, (3,3), padding="same", return_sequences=True,
                    input_shape=input_shape),
@@ -21,7 +18,7 @@ def build_model_convlstm(input_shape):
     model.compile(optimizer="adam", loss="mse", metrics=["mae"])
     return model
 
-# Exemple de résumé
+# Example 
 if __name__ == "__main__":
-    mdl = build_model_convlstm((9, 743, 372, 1))
+    mdl = build_model_convlstm((12, 743, 372, 1))
     mdl.summary(line_length=120)
