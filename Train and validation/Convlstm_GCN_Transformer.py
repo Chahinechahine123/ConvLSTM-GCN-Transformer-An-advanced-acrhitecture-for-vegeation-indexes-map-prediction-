@@ -5,7 +5,7 @@ import numpy as np
 H, W = 372, 743
 N = H * W
 
-# --- 1. Adjacence Sparse ---
+# --- 1.  Sparse adjency matrix ---
 def create_grid_adjacency_sparse(h, w):
     row_idx, col_idx = [], []
     for r in range(h):
@@ -24,7 +24,7 @@ def create_grid_adjacency_sparse(h, w):
 
 A_sparse = create_grid_adjacency_sparse(H, W)
 
-# --- 2. Couche GCN ---
+# --- 2. layer GCN ---
 class GraphConvLayer(layers.Layer):
     def __init__(self, out_features, **kwargs):
         super().__init__(**kwargs)
@@ -42,7 +42,7 @@ class GraphConvLayer(layers.Layer):
             return tf.matmul(AXb, self.W) + self.b
         return tf.map_fn(apply_graph_conv, X)
 
-# --- 3. Bloc Transformer Encoder ---
+# --- 3.  Transformer Encoder ---
 class TransformerBlock(layers.Layer):
     def __init__(self, embed_dim, num_heads, ff_dim, rate=0.1):
         super().__init__()
@@ -66,8 +66,8 @@ class TransformerBlock(layers.Layer):
         return self.layernorm2(out1 + ffn_output)
 
 
-# --- 4. Modèle complet ---
-def build_model_convlstm_gcn_transformer(input_shape=(9, H, W, 1)):
+# --- 4. Model ---
+def build_model_convlstm_gcn_transformer(input_shape=(12, H, W, 1)):
     inputs = layers.Input(shape=input_shape)
 
     # ConvLSTM
@@ -87,14 +87,14 @@ def build_model_convlstm_gcn_transformer(input_shape=(9, H, W, 1)):
     # Reshape to image
     x = layers.Reshape((H, W, 32))(x)
 
-    # Sortie
+    
     outputs = layers.Conv2D(1, (3, 3), activation='sigmoid', padding='same')(x)
 
     model = Model(inputs, outputs)
     model.compile(optimizer='adam', loss='mse', metrics=['mae'])
     return model
 
-# === 5. Test du modèle ===
+
 if __name__ == "__main__":
     model = build_model_convlstm_gcn_transformer()
     model.summary()
