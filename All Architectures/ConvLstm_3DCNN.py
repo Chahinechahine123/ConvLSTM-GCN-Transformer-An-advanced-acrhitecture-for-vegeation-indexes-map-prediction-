@@ -4,13 +4,13 @@ from tensorflow.keras import layers, Model
 def build_model_3dcnn_convlstm(input_shape=(9, 372, 743, 1)):
     inputs = layers.Input(shape=input_shape)  # (T, H, W, C)
 
-    # === Extraction locale spatio-temporelle avec 3D CNN
+    # === local Extraction  with 3D CNN
     x = layers.Conv3D(
         filters=32,
         kernel_size=(3, 3, 3),  # (time, height, width)
         padding='same',
         activation='relu'
-    )(inputs)  # (9, 372, 743, 32)
+    )(inputs)  
     x = layers.BatchNormalization()(x)
 
     # === temporal sequence with ConvLSTM2D
