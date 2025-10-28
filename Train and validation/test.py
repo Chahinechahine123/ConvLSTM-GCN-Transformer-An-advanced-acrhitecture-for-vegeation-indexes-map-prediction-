@@ -5,23 +5,23 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import os
 
-# === Chemins ===
-MODEL_PATH = "brute_data/ConvLstm_Gcn.keras"
-DATA_DIR   = "brute_data/modis"
-OUT_DIR    = "brute_data/modis/test_outputs_sentinel"
+
+MODEL_PATH = "train/ConvLstm_Gcn_trans.keras"
+DATA_DIR   = "data/"
+OUT_DIR    = ""
 os.makedirs(OUT_DIR, exist_ok=True)
 
-# === Chargement données ===
+# === load data ===
 model  = tf.keras.models.load_model(MODEL_PATH)
 X_test = np.load(os.path.join(DATA_DIR, "X_test.npy"))    # (N, 9, H, W, 1)
 y_test = np.load(os.path.join(DATA_DIR, "y_test.npy"))    # (N, H, W, 1)
 
 print("Shapes – X:", X_test.shape, "| y:", y_test.shape)
 
-# === Prédiction ===
+# === Prediction ===
 y_pred = model.predict(X_test, batch_size=1, verbose=1)   # (N, H, W, 1)
 
-# === Métriques globales ===
+# === Metrics  ===
 y_true_flat = y_test.reshape(len(y_test), -1)
 y_pred_flat = y_pred.reshape(len(y_pred), -1)
 
@@ -36,7 +36,7 @@ print(f"✅  NSE  = {nse:.5f}")
 with open(os.path.join(OUT_DIR, "metrics.txt"), "w") as f:
     f.write(f"RMSE: {rmse:.6f}\nMAE : {mae:.6f}\nNSE : {nse:.6f}\n")
 
-# === Export des images concaténées (prédiction + réalité) ===
+# === concate real + predicted img ===
 seuil_mer = 0.1
 cmap = cm.get_cmap("RdYlGn")
 
@@ -47,24 +47,24 @@ for idx in range(len(y_pred)):
     pred_rgba[pred < seuil_mer] = [1, 0, 0]
     pred_rgb = (pred_rgba * 255).astype(np.uint8)
 
-    # Image réelle (sans seuil)
+    
     real = y_test[idx, :, :, 0]
     real_rgba = cmap(real)[:, :, :3]
     real_rgb = (real_rgba * 255).astype(np.uint8)
 
-    # Concaténation horizontalement
+    
     concat = np.concatenate([pred_rgb, real_rgb], axis=1)  # (H, 2*W, 3)
 
-    # Affichage avec titres
+    
     fig, ax = plt.subplots(1, 1, figsize=(8, 4))
     ax.imshow(concat)
     ax.axis("off")
     ax.set_title(f"Prédiction (gauche) vs Réel (droite) — #{idx}")
     plt.tight_layout()
 
-    # Sauvegarde image
+    
     save_path = os.path.join(OUT_DIR, f"comparison_{idx:04d}.png")
     plt.savefig(save_path, dpi=150)
     plt.close()
 
-print(f"💾  {len(y_pred)} comparaisons PNG sauvegardées dans {OUT_DIR}")
+
