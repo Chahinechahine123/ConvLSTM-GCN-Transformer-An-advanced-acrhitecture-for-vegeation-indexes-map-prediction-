@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow.keras import layers, Model
 import numpy as np
 
-# === GCN simplifié en couche personnalisée ===
+# === GCN  ===
 class GraphConvLayer(layers.Layer):
     def __init__(self, output_dim):
         super(GraphConvLayer, self).__init__()
@@ -13,7 +13,7 @@ class GraphConvLayer(layers.Layer):
                                  initializer="glorot_uniform",
                                  trainable=True)
 
-        # Création d'une matrice d'adjacence fixe complète (tous les nœuds connectés)
+        
         num_nodes = input_shape[1]
         A = np.ones((num_nodes, num_nodes), dtype=np.float32)
         np.fill_diagonal(A, 1.0)
@@ -24,16 +24,16 @@ class GraphConvLayer(layers.Layer):
         x = tf.linalg.matmul(self.A, x)
         return tf.matmul(x, self.w)
 
-# === Modèle complet ===
-def build_model_gcn_transformer(input_shape=(9, 64, 64, 3)):
-    inputs = layers.Input(shape=input_shape)  # (batch, 9, 64, 64, 3)
+# === Model ===
+def build_model_gcn_transformer(input_shape=(12, 64, 64, 3)):
+    inputs = layers.Input(shape=input_shape)  
 
-    # === Bloc CNN par frame
+    # === Bloc CNN per frame
     x = layers.TimeDistributed(layers.Conv2D(32, (3, 3), padding='same', activation='relu'))(inputs)
     x = layers.TimeDistributed(layers.Conv2D(64, (3, 3), padding='same', activation='relu'))(x)
-    x = layers.TimeDistributed(layers.Flatten())(x)  # (batch, 9, 64*64*64)
+    x = layers.TimeDistributed(layers.Flatten())(x) 
 
-    # === Réduction temporelle : moyenne
+    # === Reduction  : mean
     x = layers.Lambda(lambda x: tf.reduce_mean(x, axis=1))(x)  # (batch, 64*64*64)
 
     # === Mise en forme pour le graphe : (4096 nœuds, 64 features)
@@ -49,7 +49,7 @@ def build_model_gcn_transformer(input_shape=(9, 64, 64, 3)):
     x = layers.Dense(64, activation='relu')(x)
     x = layers.LayerNormalization()(x)
 
-    # === Reconstruction en image
+    # === Reconstruction 
     x = layers.Reshape((64, 64, 64))(x)
     outputs = layers.Conv2D(3, (3, 3), activation='sigmoid', padding='same')(x)
 
@@ -57,7 +57,7 @@ def build_model_gcn_transformer(input_shape=(9, 64, 64, 3)):
     model.compile(optimizer='adam', loss='mse', metrics=['mae'])
     return model
 
-# === Test du modèle avec summary ===
+
 if __name__ == "__main__":
-    model = build_model_gcn_transformer((9, 64, 64, 3))
+    model = build_model_gcn_transformer((12, 64, 64, 3))
     model.summary()
