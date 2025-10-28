@@ -27,24 +27,24 @@ The project is organized for clarity and reproducibility, with core components g
 ConvLSTM-GCN-Transformer/
 ├── architectures/             \# All models used for the ablation study, including the final one.
 │   ├── ConvLstm.py
-│   ├── ConvLstm\_3DCNN.py
-│   ├── ConvLstm\_Gcn.py
-│   ├── ConvLstm\_Transformer.py
-│   ├── ConvLstm\_Gcn\_Transformer.py  \# The final architecture
-│   └── GCN\_transformer.py
-├── data\_collection/           \# Google Earth Engine (GEE) scripts for automated data fetching.
-│   ├── sentinel\_2\_data.py
+│   ├── ConvLstm_3DCNN.py
+│   ├── ConvLstm_Gcn.py
+│   ├── ConvLstm_Transformer.py
+│   ├── ConvLstm_Gcn_Transformer.py  \# The final architecture
+│   └── GCN_transformer.py
+├── data_collection/           \# Google Earth Engine (GEE) scripts for automated data fetching.
+│   ├── sentinel_2\_data.py
 │   ├── modis.py
 │   └── landsat.py
-├── data\_preparation/          \# Scripts to convert raw data into model-ready sequences.
-│   └── sequences\_creation.py
+├── data_preparation/          \# Scripts to convert raw data into model-ready sequences.
+│   └── sequences_creation.py
 ├── training/                  \# Main training and testing scripts.
 │   ├── train.py
 │   └── test.py
 ├── utils/                     \# Utility functions (e.g., GCN adjacency matrix, custom layers).
-│   └── implementation\_functions.py
+│   └── implementation_functions.py
 ├── assets/                    \# Project images and diagrams.
-│   └── CONVlstm\_gcn\_TRANSFORMER.PNG
+│   └── CONVlstm_gcn_TRANSFORMER.PNG
 ├── README.md                  \# This file.
 └── requirements.txt           \# Required Python packages.
 
