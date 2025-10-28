@@ -176,11 +176,11 @@ The core flow is:
 
 The architecture significantly outperformed baselines across various metrics and generalization tests.
 
-| Metric | ConvLSTM-GCN-Transformer (Landsat NDVI) | Ablation Baseline (Example: ConvLSTM) |
-| :--- | :--- | :--- |
-| **RMSE** | 0.034 | 0.055 (Hypothetical) |
-| **NSE** | 0.866 | 0.750 (Hypothetical) |
-| **MAE** | 0.015 | 0.028 (Hypothetical) |
+| Metric | ConvLSTM-GCN-Transformer (Landsat NDVI) | 
+| :--- | :--- | 
+| **RMSE** | 0.034 |
+| **NSE** | 0.866 |
+| **MAE** | 0.015 | 
 
 For a complete analysis of the ablation study and cross-sensor/cross-index generalization results (Sentinel-2, MODIS, EVI, SAVI), please refer to the accompanying paper.
 
@@ -191,10 +191,10 @@ If you use this model, the code, or the methodology in your research, please cit
 ```
 @article{votre_nom_2025_convlstm,
   title={ConvLSTM-GCN-Transformer: Spatiotemporal Graph-Attention Model for Multisource Vegetation Index Map Forecasting},
-  author={Votre Nom et Vos Co-auteurs},
-  journal={Nom du Journal},
+  author={},
+  journal={TBD},
   year={2025},
-  url={Link to your published paper}
+  url={}
 }
 ```
 
@@ -202,9 +202,9 @@ If you use this model, the code, or the methodology in your research, please cit
 
 For questions, issues, or collaborations related to this project, please contact:
 
-**[Your Full Name]**
+**[Mohamed Chahine BOUAZIZ]**
 
-  * **Email:** [Your Professional Email]
-  * **LinkedIn/Personal Link:** [Your Link]
+  * **Email:** [bouazizchahine7@gmail.com]
+  
 
 ---
