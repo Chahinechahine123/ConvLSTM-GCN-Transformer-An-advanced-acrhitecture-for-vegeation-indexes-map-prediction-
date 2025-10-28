@@ -13,7 +13,7 @@ def build_model_3dcnn_convlstm(input_shape=(9, 372, 743, 1)):
     )(inputs)  # (9, 372, 743, 32)
     x = layers.BatchNormalization()(x)
 
-    # === Séquence temporelle via ConvLSTM2D
+    # === temporal sequence with ConvLSTM2D
     x = layers.ConvLSTM2D(
         filters=64,
         kernel_size=(3, 3),
@@ -27,7 +27,7 @@ def build_model_3dcnn_convlstm(input_shape=(9, 372, 743, 1)):
     outputs = layers.Conv2D(
         filters=1,
         kernel_size=(3, 3),
-        activation='sigmoid',  # NDVI normalisé entre 0 et 1
+        activation='sigmoid',  # NDVI normalisation between 0 and 1
         padding='same'
     )(x)  # (372, 743, 1)
 
@@ -35,7 +35,7 @@ def build_model_3dcnn_convlstm(input_shape=(9, 372, 743, 1)):
     model.compile(optimizer='adam', loss='mse', metrics=['mae'])
     return model
 
-# === Test du modèle
+
 if __name__ == "__main__":
-    model = build_model_3dcnn_convlstm(input_shape=(9, 372, 743, 1))
+    model = build_model_3dcnn_convlstm(input_shape=(12, 372, 743, 1))
     model.summary()
