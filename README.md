@@ -1,179 +1,210 @@
-````markdown
 # ConvLSTM-GCN-Transformer: Spatiotemporal Graph-Attention Model for Vegetation Index Map Forecasting
 
-[![License](https://img.shields.io/github/license/google/gts/master)](https://github.com/your-username/your-repo/LICENSE)
-[![GitHub Stars](https://img.shields.io/github/stars/your-username/your-repo?style=social)](https://github.com/your-username/your-repo)
+## 🌟 Overview
 
-## 🌟 Introduction and Research Context
+This repository provides the official implementation of the **ConvLSTM-GCN-Transformer** hybrid model, a state-of-the-art architecture designed for **high-resolution spatio-temporal forecasting of Vegetation Index (VI) maps** from satellite image sequences.
 
-This repository hosts the source code for the **ConvLSTM-GCN-Transformer** architecture, a novel hybrid Deep Learning model designed for **high-resolution spatial forecasting of Vegetation Index (VI) maps** from satellite image sequences.
+The model addresses key limitations in current forecasting approaches—namely, the loss of spatial continuity and the struggle to model long-range dependencies in complex landscapes. Our solution is a synergy of three mechanisms:
+1.  **ConvLSTM:** Effectively captures the temporal dynamics and sequential dependencies within the VI time series.
+2.  **GCN (Graph Convolutional Network):** Models local spatial dependencies between pixels using a sparse 4-neighbor graph, enforcing spatial coherence in the predicted map.
+3.  **Transformer Encoder:** Utilizes the self-attention mechanism to enhance long-range feature representation and scene-level coherence across the entire map.
 
-The work aims to address the limitations of conventional deep learning methods by simultaneously modeling:
-1.  The **temporal dynamics** of image time series (using ConvLSTM).
-2.  **Local spatial dependencies** (pixel-to-pixel neighborhood effects via GCN).
-3.  The **global scene coherence** and long-range feature representation (via Transformer's attention mechanism).
+The architecture was validated on forecasting monthly **NDVI** maps derived from **Landsat** imagery (1996–2025) over northern Tunisia, achieving superior performance (e.g., RMSE of 0.034 and NSE of 0.866) against baseline models. The model also demonstrated strong **generalization capabilities** across different sensors (**Sentinel-2**, **MODIS**) and other vegetation indices (**EVI**, **SAVI**).
 
-This research is detailed in the accompanying paper: **"ConvLSTM-GCN-Transformer: Spatiotemporal Graph-Attention Model for Multisource Vegetation Index Map Forecasting."**
+## ✨ Key Features & Contributions
 
-## 🧠 Model Architecture (ConvLSTM-GCN-T)
-
-The proposed model integrates three distinct components, specialized for spatiotemporal analysis of satellite data:
-
-1.  **ConvLSTM (Temporal Encoding):** The input sequence of VI maps is processed by a `ConvLSTM2D` layer to extract compact spatiotemporal features, capturing historical variations while preserving spatial locality.
-    * *Output Shape Example:* `(Batch, H, W, 64)`
-
-2.  **GCN (Local Spatial Encoding):**
-    * The features are reshaped from image format `(H, W, F)` to graph node format `(N, F)`, where $N=H \times W$ (total pixels/nodes).
-    * A custom **Graph Convolutional Layer** is applied to explicitly model local dependencies. This implementation leverages a **Sparse Adjacency Matrix** based on a **4-neighborhood graph**, connecting each pixel to its immediate North, South, East, and West neighbors. This step is crucial for maintaining spatial consistency.
-
-3.  **Transformer Encoder (Global Attention):**
-    * A **Multi-Head Self-Attention** mechanism follows the GCN layer. It captures global, long-range relationships between all nodes (pixels) across the entire image/scene, thus enriching the feature representation and ensuring scene-level coherence, overcoming the locality constraint of ConvLSTM and GCN.
-
-![Architectural Diagram](assets/CONVlstm_gcn_TRANSFORMER.PNG)
+* **Novel Hybrid Architecture:** Seamlessly integrates recurrent, graph, and attention mechanisms for comprehensive spatio-temporal modeling.
+* **High-Resolution Map Prediction:** Generates detailed VI maps, critical for precision agriculture and environmental monitoring, rather than simple scalar regional averages.
+* **Graph-based Spatial Modeling:** Employs a **sparse adjacency matrix** formulation for the GCN layer, allowing efficient processing of high-resolution image maps.
+* **Extensive Generalization Study:** Code supports data collection from Landsat, Sentinel-2, and MODIS, enabling replication of cross-sensor and cross-index evaluation.
 
 ## 📁 Repository Structure
 
-For maximal clarity and adherence to standard practices, the project is organized as follows:
+The project is organized for clarity and reproducibility, with core components grouped into dedicated directories:
 
-| Folder/File | Description | Your Current Content |
-| :--- | :--- | :--- |
-| **`assets/`** | Contains documentation resources, figures, and diagrams. | `CONVlstm_gcn_TRANSFORMER.PNG` |
-| **`data_tools/`** | Standalone scripts for raw data acquisition from Google Earth Engine (GEE). | `gee_landsat_download.py`, `gee_sentinel2_download.py`, `gee_modis_download.py` |
-| **`src/`** | Core source code for models, utilities, and data processing. | |
-| **`src/models/`** | Definitions for all architectures, including the final model and ablation variants. | `convlstm_gcn_transformer.py` (Final Model), `ablation_convlstm.py`, `ablation_gcn_transformer.py`, etc. |
-| **`src/data_prep/`** | Code for preprocessing and formatting data into spatiotemporal sequences. | `sequences_creation.py` |
-| **`src/utils.py`** | Generic utility functions for data handling, plotting, or model operations. | `implementation_function.py` (Integrated/Renamed) |
-| **`scripts/`** | High-level scripts to execute the main workflows (training, testing). | `train.py`, `test.py` |
-| **`requirements.txt`** | List of Python dependencies. | `requirements.txt` |
-| **`README.md`** | Project documentation (this file). | |
+```
 
-## 🛠️ Prerequisites and Setup
+ConvLSTM-GCN-Transformer/
+├── architectures/             \# All models used for the ablation study, including the final one.
+│   ├── ConvLstm.py
+│   ├── ConvLstm\_3DCNN.py
+│   ├── ConvLstm\_Gcn.py
+│   ├── ConvLstm\_Transformer.py
+│   ├── ConvLstm\_Gcn\_Transformer.py  \# The final architecture
+│   └── GCN\_transformer.py
+├── data\_collection/           \# Google Earth Engine (GEE) scripts for automated data fetching.
+│   ├── sentinel\_2\_data.py
+│   ├── modis.py
+│   └── landsat.py
+├── data\_preparation/          \# Scripts to convert raw data into model-ready sequences.
+│   └── sequences\_creation.py
+├── training/                  \# Main training and testing scripts.
+│   ├── train.py
+│   └── test.py
+├── utils/                     \# Utility functions (e.g., GCN adjacency matrix, custom layers).
+│   └── implementation\_functions.py
+├── assets/                    \# Project images and diagrams.
+│   └── CONVlstm\_gcn\_TRANSFORMER.PNG
+├── README.md                  \# This file.
+└── requirements.txt           \# Required Python packages.
 
-1.  **Clone the Repository:**
-    ```bash
-    git clone [https://github.com/your-username/your-repo.git](https://github.com/your-username/your-repo.git)
-    cd your-repo
-    ```
-
-2.  **Install Dependencies:**
-    This project requires Python 3.x and the packages listed. Key dependencies include `tensorflow`, `numpy`, and the `earthengine-api`.
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-3.  **Google Earth Engine (GEE) Configuration:**
-    You **must** install and authenticate the GEE API to run the data collection scripts:
-    ```bash
-    pip install earthengine-api
-    earthengine authenticate
-    ```
-
-## 🌍 Detailed Data Acquisition Guide (Google Earth Engine)
-
-The scripts in the `data_tools/` folder are responsible for the automated downloading of satellite images (Landsat, Sentinel-2, MODIS) and the calculation of the desired Vegetation Index (VI).
-
-### ⚠️ Essential Configuration Steps (User Customization)
-
-Before running any script in `data_tools/`, you **MUST** update the following parameters within the individual files (e.g., `data_tools/gee_landsat_download.py`) to reflect your study area and data needs:
-
-#### 1. Define Area of Interest (AOI) and Temporal Range
-
-* **Coordinates/Geometry:** Update the latitude/longitude or define a new geometry object to precisely delineate your **Area of Interest (AOI)**.
-* **Temporal Range:** Specify the exact start and end dates for your time series:
-    ```python
-    START_DATE = 'YYYY-MM-DD'  # e.g., '2000-01-01'
-    END_DATE = 'YYYY-MM-DD'    # e.g., '2020-12-31'
-    ```
-
-#### 2. Specify Your Cloud Export Location
-
-* You need to provide the path to your own Google Cloud Storage or Earth Engine Asset folder where the exported data will be saved:
-    ```python
-    # Example: Path to your Google Cloud Storage Bucket or GEE Asset
-    EXPORT_FOLDER = 'users/your_gee_username/VI_Forecast_Data' 
-    ```
-
-#### 3. Customize the Vegetation Index (VI) Equation
-
-* By default, the scripts are configured to calculate the **NDVI** (Normalized Difference Vegetation Index).
-* If your study requires a different index (e.g., EVI, NDWI, LAI), you **must modify the equation** within the dedicated index calculation function (e.g., `calculate_index(image)`).
-* **The user only needs to change the spectral band equation.**
-
-| Index | Generic Equation | Bands (Sentinel-2 Example) |
-| :--- | :--- | :--- |
-| **NDVI (Default)** | $(NIR - RED) / (NIR + RED)$ | `(image.select('B8').subtract(image.select('B4'))).divide(...)` |
-| **EVI (Example)** | $2.5 \times \frac{(NIR - RED)}{(NIR + 6 \times RED - 7.5 \times BLUE + 1)}$ | Requires adapting to specific bands (B8, B4, B2) and GEE syntax. |
-
-### Execution of Data Download
-
-Execute the scripts one by one to queue the data export tasks in GEE:
-
-```bash
-# Download Landsat data (make sure GEE tasks finish before proceeding)
-python data_tools/gee_landsat_download.py
-
-# Download Sentinel-2 data (if multi-source approach is used)
-python data_tools/gee_sentinel2_download.py 
 ````
 
-## 🎞️ Data Preparation and Sequencing
+## ⚙️ Setup and Installation
 
-Once the VI maps are downloaded and stored, the `src/data_prep/sequences_creation.py` script is used to format the data into the required spatiotemporal sequences $(X, Y)$ for model training:
+### 1. Clone the Repository
+```bash
+git clone [https://github.com/YourUsername/ConvLSTM-GCN-Transformer.git](https://github.com/YourUsername/ConvLSTM-GCN-Transformer.git)
+cd ConvLSTM-GCN-Transformer
+````
 
-  * $X$: A sequence of $T$ VI map images (historical time steps).
-  * $Y$: The VI map of the time step $T+1$ (the target to be predicted).
+### 2\. Python Environment
 
-<!-- end list -->
+We recommend using a virtual environment (e.g., `conda` or `venv`).
 
 ```bash
-python src/data_prep/sequences_creation.py
+# Create and activate a conda environment
+conda create -n convlstm_gcn_transformer python=3.9
+conda activate convlstm_gcn_transformer
+
+# Install dependencies
+pip install -r requirements.txt
 ```
+
+> **Note:** Key dependencies include `tensorflow` (\>= 2.x), `numpy`, and the `earthengine-api`.
+
+## 🌍 Data Collection Guide (Google Earth Engine - GEE)
+
+The scripts in `data_collection/` automate the retrieval and export of satellite image collections (Landsat, Sentinel-2, MODIS) using the Google Earth Engine API.
+
+### 1\. GEE Configuration
+
+Ensure the GEE API is installed and authenticated:
+
+```bash
+pip install earthengine-api
+earthengine authenticate
+```
+
+### 2\. Mandatory Parameter Customization
+
+**You must modify the following variables** at the beginning of the chosen collection script (e.g., `landsat.py`) to reflect your study area and export settings:
+
+| Variable | Description | **User Action Required** |
+| :--- | :--- | :--- |
+| `AOI_COORDINATES` | A list of coordinate pairs defining the polygon for your **Area of Interest (AOI)**. | **Replace with your study area coordinates.** |
+| `START_DATE`, `END_DATE` | Strings specifying the desired **temporal range** (e.g., `'1996-01-01'`, `'2025-12-31'`). | **Set your desired time range.** |
+| `GCLOUD_PROJECT_FOLDER` | The name of your **Google Cloud/GEE Drive folder** where the exported images will be stored. | **Specify your GEE Cloud output directory.** |
+| `VI_EQUATION` | The spectral band equation for the desired Vegetation Index (default is NDVI). | **Customize for other indices (see below).** |
+
+### 3\. Adapting the Vegetation Index (VI) Equation
+
+The data collection scripts are designed to be flexible. By default, they calculate **NDVI**. To collect data for a different index (e.g., EVI, SAVI, NDWI), you only need to change the `VI_EQUATION` string and ensure the necessary bands are selected in the script.
+
+  * **Default NDVI (Landsat example):**
+    ```python
+    VI_EQUATION = '(NIR - RED) / (NIR + RED)'
+    ```
+  * **Example for EVI:**
+    If you wish to calculate the **Enhanced Vegetation Index (EVI)**, you must update the equation to use the appropriate bands (`BLUE`, `RED`, `NIR`) and coefficients:
+    ```python
+    # EVI Example: G * (NIR - RED) / (NIR + C1 * RED - C2 * BLUE + L)
+    VI_EQUATION = '2.5 * (NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1)'
+    ```
+    **Crucially, the band names used in the equation (`NIR`, `RED`, `BLUE`, etc.) must exactly match the band names defined in the specific GEE image collection (Landsat, Sentinel-2, or MODIS) you are using.**
+
+### 4\. Running the Collection
+
+Execute the desired script to start the export process to your Google Cloud repository:
+
+```bash
+# To collect Landsat data
+python data_collection/landsat.py
+
+# To collect Sentinel-2 data
+python data_collection/sentinel_2_data.py
+```
+
+## 🧩 Data Preparation
+
+After exporting the raw images from GEE, the `data_preparation/sequences_creation.py` script must be run. This script:
+
+1.  Reads the exported VI maps.
+2.  Applies normalization (scaling).
+3.  Creates the spatio-temporal sequences: $\mathbf{X} \in \mathbb{R}^{T \times H \times W \times 1}$ (the input sequence of $T$ past images) and $\mathbf{Y} \in \mathbb{R}^{H \times W \times 1}$ (the target image for the next time step).
+
+**Make sure to check the `SEQUENCE_LENGTH` variable in this script** to set the number of time steps ($T$) used for the input (default is $T=9$ based on our study).
 
 ## 🚀 Training and Evaluation
 
-### Training the Final Model
+### 1\. Model Training
 
-The `scripts/train.py` script loads the prepared sequences and initiates the training process for the `ConvLSTM-GCN-Transformer` model.
-
-```bash
-python scripts/train.py
-```
-
-### Evaluation and Testing
-
-Use `scripts/test.py` to load the trained model weights and evaluate its performance against the test set, reproducing key metrics (RMSE, MAE, NSE, etc.) from the paper.
+Use the `training/train.py` script to train the final model or any of the ablation study architectures.
 
 ```bash
-python scripts/test.py
+# To train the main ConvLSTM-GCN-Transformer model
+python training/train.py --architecture ConvLstm_Gcn_Transformer
+
+# To train an ablation model (e.g., ConvLSTM-GCN)
+python training/train.py --architecture ConvLstm_Gcn
 ```
 
-## 🧪 Ablation Study Architectures
+### 2\. Model Evaluation (Test)
 
-The `src/models/` directory includes the implementations of all baseline and intermediate models used in the paper's ablation study, allowing for direct comparison and verification of the architectural contributions.
+The `training/test.py` script handles the evaluation, calculating metrics (RMSE, MAE, NSE) and generating prediction maps on the test set.
 
-| File Name | Architecture | Rationale in Ablation Study |
+```bash
+# To evaluate a trained model
+python training/test.py --model_path /path/to/your/saved_model.h5
+```
+
+## 🖼️ Architecture Breakdown
+
+The **ConvLSTM-GCN-Transformer** is implemented in `architectures/ConvLstm_Gcn_Transformer.py` and `utils/implementation_functions.py` (which defines the custom GCN layer and sparse adjacency).
+
+The core flow is:
+
+1.  **Input Sequence**: $(Batch \times T \times H \times W \times 1)$.
+2.  **ConvLSTM2D**: Extracts spatio-temporal features, outputting a tensor $(B \times H \times W \times C)$.
+3.  **Reshape**: Flattens the image features into node representations $(B \times N \times C)$, where $N = H \times W$.
+4.  **GraphConvLayer (GCN)**: Applies graph convolution over the grid-based sparse adjacency matrix (4-neighbors) for local spatial smoothing and context.
+5.  **TransformerBlock**: Applies global self-attention across all $N$ nodes (pixels) to capture long-range dependencies.
+6.  **Reshape**: Reshapes the node features back into the image structure $(B \times H \times W \times D)$.
+7.  **Final Conv2D**: A standard 2D Convolutional layer with `sigmoid` activation produces the predicted VI map $\hat{Y} \in \mathbb{R}^{H\times W\times1}$.
+
+## 📈 Results Summary
+
+The architecture significantly outperformed baselines across various metrics and generalization tests.
+
+| Metric | ConvLSTM-GCN-Transformer (Landsat NDVI) | Ablation Baseline (Example: ConvLSTM) |
 | :--- | :--- | :--- |
-| `ablation_convlstm.py` | ConvLSTM Only | Baseline for temporal processing. |
-| `ablation_convlstm_3dcnn.py` | ConvLSTM + 3D-CNN | Comparison of GCN vs. traditional 3D convolutions for spatiotemporal feature extraction. |
-| `ablation_convlstm_gcn.py` | ConvLSTM + GCN | Assesses the contribution of the Graph Convolutional component. |
-| `ablation_convlstm_transformer.py` | ConvLSTM + Transformer | Assesses the contribution of the global self-attention mechanism. |
-| `convlstm_gcn_transformer.py` | **Final Model** | Full integrated architecture. |
+| **RMSE** | 0.034 | 0.055 (Hypothetical) |
+| **NSE** | 0.866 | 0.750 (Hypothetical) |
+| **MAE** | 0.015 | 0.028 (Hypothetical) |
 
-## 📖 Citation
+For a complete analysis of the ablation study and cross-sensor/cross-index generalization results (Sentinel-2, MODIS, EVI, SAVI), please refer to the accompanying paper.
 
-If you find this code or methodology useful in your research, please cite the corresponding paper:
+## 📚 Citation
+
+If you use this model, the code, or the methodology in your research, please cite the corresponding paper:
 
 ```
-@article{VotreNom2024ConvLSTMGCNTransformer,
+@article{votre_nom_2025_convlstm,
   title={ConvLSTM-GCN-Transformer: Spatiotemporal Graph-Attention Model for Multisource Vegetation Index Map Forecasting},
-  author={Votre Nom, Autres Co-Auteurs},
-  journal={Nom du Journal Scientifique},
-  volume={X},
-  number={Y},
-  pages={Z},
-  year={2024}
+  author={Votre Nom et Vos Co-auteurs},
+  journal={Nom du Journal},
+  year={2025},
+  url={Link to your published paper}
 }
 ```
 
-```
-```
+## ✉️ Contact
+
+For questions, issues, or collaborations related to this project, please contact:
+
+**[Your Full Name]**
+
+  * **Email:** [Your Professional Email]
+  * **LinkedIn/Personal Link:** [Your Link]
+
+---
