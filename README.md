@@ -33,7 +33,7 @@ ConvLSTM-GCN-Transformer/
 │   ├── ConvLstm_Gcn_Transformer.py  \# The final architecture
 │   └── GCN_transformer.py
 ├── data_collection/           \# Google Earth Engine (GEE) scripts for automated data fetching.
-│   ├── sentinel_2\_data.py
+│   ├── sentinel_2_data.py
 │   ├── modis.py
 │   └── landsat.py
 ├── data_preparation/          \# Scripts to convert raw data into model-ready sequences.
@@ -54,7 +54,7 @@ ConvLSTM-GCN-Transformer/
 
 ### 1. Clone the Repository
 ```bash
-git clone [https://github.com/YourUsername/ConvLSTM-GCN-Transformer.git](https://github.com/YourUsername/ConvLSTM-GCN-Transformer.git)
+git clone https://github.com/Chahinechahine123/ConvLSTM-GCN-Transformer-An-advanced-acrhitecture-for-vegeation-indexes-map-prediction-.git
 cd ConvLSTM-GCN-Transformer
 ````
 
