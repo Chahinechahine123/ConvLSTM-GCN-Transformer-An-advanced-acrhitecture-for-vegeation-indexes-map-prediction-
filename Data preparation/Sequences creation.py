@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 # === INPUT file () ===
 data_dir = "images/"
-seq_len = 12
+seq_len = 11
 
 # === load files .tif (float uniquement) ===
 files = sorted(glob.glob(os.path.join(data_dir, "*_float.tif")))
@@ -28,10 +28,10 @@ H, W = stack.shape[1:]
 # === Sequence Generation  ===
 X_test, y_test = [], []
 for i in range(len(stack) - seq_len):
-    X_test.append(stack[i:i+seq_len])     # (12, H, W)
+    X_test.append(stack[i:i+seq_len])     # (11, H, W)
     y_test.append(stack[i+seq_len])       # (H, W)
 
-X_test = np.array(X_test)[..., np.newaxis]   # (N, 12, H, W, 1)
+X_test = np.array(X_test)[..., np.newaxis]   # (N, 11, H, W, 1)
 y_test = np.array(y_test)[..., np.newaxis]   # (N, H, W, 1)
 
 
