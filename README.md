@@ -25,22 +25,27 @@ The project is organized for clarity and reproducibility, with core components g
 ```
 
 ConvLSTM-GCN-Transformer/
-├── architectures/             \# All models used for the ablation study, including the final one.
+├── All Architectures/             \# All models used for the ablation study, including the final one.
 │   ├── ConvLstm.py
 │   ├── ConvLstm_3DCNN.py
-│   ├── ConvLstm_Gcn.py
+│   ├── ConvLstm_Gcn(4-neighbor).py
+│   ├── ConvLstm_Gcn (8-neighbor).py
 │   ├── ConvLstm_Transformer.py
-│   ├── ConvLstm_Gcn_Transformer.py  \# The final architecture
-│   └── GCN_transformer.py
-├── data_collection/           \# Google Earth Engine (GEE) scripts for automated data fetching.
+│   ├── ConvLstm_Gcn_Transformer.py  \# The final architecture with 4-neighbor graph
+    └── ConvLstm_Gcn_Transformer(8-neighbor).py  \# The final architecture with 8-neighbor 
+
+├── Data_Collection/           \# Google Earth Engine (GEE) scripts for automated data fetching.
 │   ├── sentinel_2_data.py
 │   ├── modis.py
 │   └── landsat.py
-├── data_preparation/          \# Scripts to convert raw data into model-ready sequences.
-│   └── sequences_creation.py
-├── training/                  \# Main training and testing scripts.
-│   ├── train.py
-│   └── test.py
+├── Data_Preparation/          \# Scripts to convert raw data into model-ready sequences.
+│   ├── ALL_gap_filling_methods.py
+    └── sequences_creation.py
+├── Train and Validation/                  \# Main training and testing scripts.
+│   ├── ConvLstm_Gcn_Transformer.py
+│   └── test_with_spatial_metrics
+    ├── train.py
+│   └── test.py 
 ├── utils/                     \# Utility functions (e.g., GCN adjacency matrix, custom layers).
 │   └── implementation_functions.py
 ├── assets/                    \# Project images and diagrams.
@@ -181,6 +186,9 @@ The architecture significantly outperformed baselines across various metrics and
 | **RMSE** | 0.034 |
 | **NSE** | 0.866 |
 | **MAE** | 0.015 | 
+| **SSIM** |  0.863 |
+| **Moran's I** | 0.094 |
+| 
 
 For a complete analysis of the ablation study and cross-sensor/cross-index generalization results (Sentinel-2, MODIS, EVI, SAVI), please refer to the accompanying paper.
 
