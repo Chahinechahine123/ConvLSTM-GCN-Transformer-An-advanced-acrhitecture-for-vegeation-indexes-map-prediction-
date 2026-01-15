@@ -48,8 +48,8 @@ ConvLSTM-GCN-Transformer/
 │   └── test.py 
 ├── utils/                     \# Utility functions (e.g., GCN adjacency matrix, custom layers).
 │   └── implementation_functions.py
-├── assets/                    \# Project images and diagrams.
-│   └── CONVlstm_gcn_TRANSFORMER.PNG
+├── └── Finale_Notebook.ipynb               
+│   └── CONVlstm_gcn_TRANSFORMER.PNG \# Project images and diagrams.
 ├── README.md                  \# This file.
 └── requirements.txt           \# Required Python packages.
 
